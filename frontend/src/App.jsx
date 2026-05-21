@@ -3,206 +3,295 @@ import "./index.css";
 
 function App() {
   const [page, setPage] = useState("dashboard");
-  const [apiStatus, setApiStatus] = useState("Verificando conexión...");
+  const [apiStatus, setApiStatus] = useState("Verificando...");
 
   useEffect(() => {
     fetch("http://localhost:8000/api/health")
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          setApiStatus("Backend conectado correctamente");
+          setApiStatus("Conectado");
         } else {
-          setApiStatus("Backend respondió con error");
+          setApiStatus("Error");
         }
       })
       .catch(() => {
-        setApiStatus("Backend no conectado");
+        setApiStatus("Sin conexión");
       });
   }, []);
 
   const renderPage = () => {
     if (page === "dashboard") return <Dashboard apiStatus={apiStatus} />;
-    if (page === "products") return <Products />;
-    if (page === "inventory") return <Inventory />;
-    if (page === "movements") return <Movements />;
-    if (page === "login") return <Login />;
+    if (page === "productos") return <Productos />;
+    if (page === "inventario") return <Inventario />;
+    if (page === "movimientos") return <Movimientos />;
+    if (page === "usuarios") return <Usuarios />;
+    if (page === "reportes") return <Reportes />;
+    if (page === "configuracion") return <Configuracion />;
   };
 
   return (
-    <div className="app">
-      <aside className="sidebar">
-        <h2>InventoryPro</h2>
-        <p>Sistema de inventario</p>
+    <div className="layout">
+      <header className="topbar">
+        <div className="brand">
+          <span>Inventario</span>
+          <span className="cart-icon">▱</span>
+        </div>
+      </header>
 
-        <button onClick={() => setPage("dashboard")}>Dashboard</button>
-        <button onClick={() => setPage("products")}>Productos</button>
-        <button onClick={() => setPage("inventory")}>Inventario</button>
-        <button onClick={() => setPage("movements")}>Movimientos</button>
-        <button onClick={() => setPage("login")}>Login</button>
+      <aside className="sidebar">
+        <div className="profile">
+          <div className="avatar">👤</div>
+          <h3>Juan Manuel Razo</h3>
+          <p>admin@inventorypro.com</p>
+        </div>
+
+        <div className="menu-title">NAVEGACIÓN PRINCIPAL</div>
+
+        <nav>
+          <button className={page === "dashboard" ? "active" : ""} onClick={() => setPage("dashboard")}>
+            <span>▦</span> Dashboard
+          </button>
+
+          <button className={page === "productos" ? "active" : ""} onClick={() => setPage("productos")}>
+            <span>◼</span> Gestión de Productos
+          </button>
+
+          <button className={page === "inventario" ? "active" : ""} onClick={() => setPage("inventario")}>
+            <span>▣</span> Gestión de Existencias
+          </button>
+
+          <button className={page === "movimientos" ? "active" : ""} onClick={() => setPage("movimientos")}>
+            <span>↕</span> Movimientos
+          </button>
+
+          <button className={page === "usuarios" ? "active" : ""} onClick={() => setPage("usuarios")}>
+            <span>☻</span> Gestión de Usuarios
+          </button>
+
+          <button className={page === "reportes" ? "active" : ""} onClick={() => setPage("reportes")}>
+            <span>▤</span> Reportes
+          </button>
+
+          <button className={page === "configuracion" ? "active" : ""} onClick={() => setPage("configuracion")}>
+            <span>⚙</span> Configuración
+          </button>
+        </nav>
       </aside>
 
-      <main className="content">
-        {renderPage()}
-      </main>
+      <main className="main-content">{renderPage()}</main>
     </div>
   );
 }
 
 function Dashboard({ apiStatus }) {
+  const cards = [
+    { title: "Clientes", value: "16", icon: "▣", color: "teal" },
+    { title: "Proveedores", value: "10", icon: "👥", color: "orange" },
+    { title: "Productos", value: "185", icon: "◼", color: "purple" },
+    { title: "Facturas", value: "1", icon: "▤", color: "gray" },
+    { title: "Existencia total", value: "149", icon: "▰", color: "blue" },
+    { title: "Existencia vendida", value: "33", icon: "🚚", color: "pink" },
+    { title: "Existencia actual", value: "115", icon: "▥", color: "sky" },
+    { title: "Importe vendido", value: "$ 413", icon: "▱", color: "deeporange" },
+    { title: "Importe pagado", value: "$ 413", icon: "$", color: "green" },
+    { title: "Importe restante", value: "$ 0", icon: "$", color: "red" },
+    { title: "Beneficio bruto", value: "$ 89", icon: "▰", color: "brown" },
+    { title: "Estado API", value: apiStatus, icon: "⌁", color: "cyan" },
+  ];
+
   return (
     <section>
-      <h1>Dashboard</h1>
-      <p className="subtitle">Resumen general del sistema InventoryPro</p>
+      <h1 className="page-title">Dashboard</h1>
 
-      <div className="cards">
-        <div className="card">
-          <h3>Productos</h3>
-          <p>24 registrados</p>
-        </div>
-
-        <div className="card">
-          <h3>Categorías</h3>
-          <p>6 activas</p>
-        </div>
-
-        <div className="card">
-          <h3>Proveedores</h3>
-          <p>8 registrados</p>
-        </div>
-
-        <div className="card">
-          <h3>Estado API</h3>
-          <p>{apiStatus}</p>
-        </div>
+      <div className="dashboard-grid">
+        {cards.map((card, index) => (
+          <div className={`stat-card ${card.color}`} key={index}>
+            <div className="stat-icon">{card.icon}</div>
+            <div className="stat-info">
+              <p>{card.title}</p>
+              <h2>{card.value}</h2>
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
 }
 
-function Products() {
+function Productos() {
   return (
     <section>
-      <h1>Productos</h1>
-      <p className="subtitle">Listado base de productos del inventario</p>
+      <h1 className="page-title">Gestión de Productos</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th>Stock mínimo</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Laptop Lenovo</td>
-            <td>Electrónica</td>
-            <td>5</td>
-            <td>Activo</td>
-          </tr>
-          <tr>
-            <td>Mouse Logitech</td>
-            <td>Accesorios</td>
-            <td>10</td>
-            <td>Activo</td>
-          </tr>
-          <tr>
-            <td>Teclado Mecánico</td>
-            <td>Accesorios</td>
-            <td>7</td>
-            <td>Activo</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="panel">
+        <div className="panel-header">
+          <h2>Productos registrados</h2>
+          <button>Agregar producto</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Proveedor</th>
+              <th>Stock mínimo</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>P-001</td>
+              <td>Laptop Lenovo</td>
+              <td>Electrónica</td>
+              <td>TecnoMax</td>
+              <td>5</td>
+              <td><span className="badge success">Activo</span></td>
+            </tr>
+
+            <tr>
+              <td>P-002</td>
+              <td>Mouse Logitech</td>
+              <td>Accesorios</td>
+              <td>CompuCenter</td>
+              <td>10</td>
+              <td><span className="badge success">Activo</span></td>
+            </tr>
+
+            <tr>
+              <td>P-003</td>
+              <td>Teclado Mecánico</td>
+              <td>Accesorios</td>
+              <td>Digital Store</td>
+              <td>7</td>
+              <td><span className="badge success">Activo</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
 
-function Inventory() {
+function Inventario() {
   return (
     <section>
-      <h1>Inventario</h1>
-      <p className="subtitle">Consulta general de existencias</p>
+      <h1 className="page-title">Gestión de Existencias</h1>
 
-      <div className="cards">
-        <div className="card">
+      <div className="inventory-grid">
+        <div className="inventory-card">
           <h3>Laptop Lenovo</h3>
-          <p>Stock actual: 12</p>
-          <span className="ok">Disponible</span>
+          <p>Almacén principal</p>
+          <strong>Stock actual: 12</strong>
+          <span className="badge success">Disponible</span>
         </div>
 
-        <div className="card">
+        <div className="inventory-card">
           <h3>Mouse Logitech</h3>
-          <p>Stock actual: 4</p>
-          <span className="warning">Stock bajo</span>
+          <p>Almacén principal</p>
+          <strong>Stock actual: 4</strong>
+          <span className="badge warning">Stock bajo</span>
         </div>
 
-        <div className="card">
+        <div className="inventory-card">
           <h3>Teclado Mecánico</h3>
-          <p>Stock actual: 18</p>
-          <span className="ok">Disponible</span>
+          <p>Almacén secundario</p>
+          <strong>Stock actual: 18</strong>
+          <span className="badge success">Disponible</span>
         </div>
       </div>
     </section>
   );
 }
 
-function Movements() {
+function Movimientos() {
   return (
     <section>
-      <h1>Movimientos</h1>
-      <p className="subtitle">Historial de entradas y salidas de inventario</p>
+      <h1 className="page-title">Movimientos de Inventario</h1>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Entrada</td>
-            <td>Laptop Lenovo</td>
-            <td>10</td>
-            <td>21/05/2026</td>
-          </tr>
-          <tr>
-            <td>Salida</td>
-            <td>Mouse Logitech</td>
-            <td>3</td>
-            <td>21/05/2026</td>
-          </tr>
-          <tr>
-            <td>Entrada</td>
-            <td>Teclado Mecánico</td>
-            <td>15</td>
-            <td>21/05/2026</td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="panel">
+        <div className="panel-header">
+          <h2>Historial de movimientos</h2>
+          <button>Nuevo movimiento</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Usuario</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><span className="badge success">Entrada</span></td>
+              <td>Laptop Lenovo</td>
+              <td>10</td>
+              <td>Juan Manuel</td>
+              <td>21/05/2026</td>
+            </tr>
+
+            <tr>
+              <td><span className="badge danger">Salida</span></td>
+              <td>Mouse Logitech</td>
+              <td>3</td>
+              <td>Juan Manuel</td>
+              <td>21/05/2026</td>
+            </tr>
+
+            <tr>
+              <td><span className="badge success">Entrada</span></td>
+              <td>Teclado Mecánico</td>
+              <td>15</td>
+              <td>Juan Manuel</td>
+              <td>21/05/2026</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
 
-function Login() {
+function Usuarios() {
   return (
-    <section className="login-box">
-      <h1>Inicio de sesión</h1>
-      <p className="subtitle">Acceso al sistema InventoryPro</p>
+    <section>
+      <h1 className="page-title">Gestión de Usuarios</h1>
+      <div className="panel">
+        <h2>Usuarios del sistema</h2>
+        <p>En este módulo se administrarán los usuarios, roles y permisos del sistema.</p>
+      </div>
+    </section>
+  );
+}
 
-      <form>
-        <label>Correo electrónico</label>
-        <input type="email" placeholder="admin@inventorypro.com" />
+function Reportes() {
+  return (
+    <section>
+      <h1 className="page-title">Reportes</h1>
+      <div className="panel">
+        <h2>Reportes de inventario</h2>
+        <p>Este módulo mostrará reportes de stock, movimientos, productos vendidos y existencias actuales.</p>
+      </div>
+    </section>
+  );
+}
 
-        <label>Contraseña</label>
-        <input type="password" placeholder="********" />
-
-        <button type="button">Iniciar sesión</button>
-      </form>
+function Configuracion() {
+  return (
+    <section>
+      <h1 className="page-title">Configuración</h1>
+      <div className="panel">
+        <h2>Configuración general</h2>
+        <p>Aquí se configurarán parámetros generales del sistema InventoryPro.</p>
+      </div>
     </section>
   );
 }
