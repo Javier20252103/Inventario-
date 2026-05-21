@@ -1,0 +1,2 @@
+echo proyecto-final-f6eaf-firebase-adminsdk-fbsvc-f0224f3738.json >> .gitignore
+echo *firebase-adminsdk*.json >> .gitignore
