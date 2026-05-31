@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import "./index.css";
 
 function App() {
@@ -297,3 +298,25 @@ function Configuracion() {
 }
 
 export default App;
+=======
+
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+export default function App() {
+  const [txt, setTxt] = useState("cargando…");
+
+  useEffect(() => {
+    fetch(`${API}/api/avance`)
+      .then((r) => r.json())
+      .then((j) => setTxt(JSON.stringify(j, null, 2)))
+      .catch((e) => setTxt("error: " + String(e)));
+  }, []);
+
+  return (
+    <div style={{ fontFamily: "monospace", padding: 16 }}>
+      <p>GET {API}/api/avance</p>
+      <pre style={{ whiteSpace: "pre-wrap" }}>{txt}</pre>
+    </div>
+  );
+}
+>>>>>>> origin/gioauth-firebase

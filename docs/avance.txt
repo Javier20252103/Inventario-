@@ -1,0 +1,7 @@
+Avance demo (Integrante 2 / conexión front-back-Firestore)
+
+1) Firebase: crea colección "avance" y documento "demo" con un campo de prueba (ej. texto: "hola").
+2) backend: copia .env.example a .env, pon FIREBASE_CREDENTIALS_PATH al JSON de servicio.
+3) Terminal A: cd backend && pip install -r requirements.txt && python public/main.py
+4) Terminal B: cd frontend && npm install && npm run dev
+5) Abre http://localhost:5173 y debe verse el JSON de /api/avance.
